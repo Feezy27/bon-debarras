@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le coin des bonnes affaires, meubles et objets d'occasion | Main Forte</title><meta name="description" content="Meubles et objets récupérés lors de débarras dans le canton de Vaud, nettoyés et vendus à petit prix. Retrait sur rendez-vous.">
+<link rel="icon" href="assets/logos/logo-maison.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="config.js"></script></head><body>
+<header class="site"><div class="w">
+<a class="marque" href="index.html"><img src="assets/logos/logo-maison.svg" alt=""><span><b data-site="nom">Main Forte</b><small data-site="signature">débarras &amp; trouvailles</small></span></a>
+<nav class="p" aria-label="Navigation principale"><a href="index.html#services">Services</a><a href="index.html#tarifs">Tarifs</a><a href="boutique.html">Le coin des bonnes affaires</a><a class="btn" href="index.html#contact">Devis gratuit</a></nav>
+</div></header>
+
+<main><section><div class="w">
+<h1 style="font-size:clamp(2rem,5vw,3.4rem)">Le coin des bonnes affaires</h1>
+<p>Des meubles et des objets sortis de maisons vaudoises, nettoyés, resserrés, cirés, et vendus à petit prix. Chaque pièce est unique : quand elle est partie, elle est partie.</p>
+<div class="note" id="bandeau" hidden></div>
+<div class="filtres puces" id="filtres" role="group" aria-label="Filtrer par catégorie"></div>
+<div class="grille" id="grille"><p>Chargement des objets…</p></div>
+<div class="note" style="margin-top:36px"><b>Comment acheter.</b> Cliquez sur « Réserver », envoyez le message. Je vous confirme la disponibilité et on fixe un rendez-vous pour le retrait. Paiement sur place par TWINT ou en espèces. Pas d'envoi pour les meubles.</div>
+</div></section></main>
+<script>
+(function(){var S=window.SITE,G=document.getElementById("grille"),F=document.getElementById("filtres"),tous=[],cat="Tout";
+var ICO='<svg viewBox="0 0 120 90" width="120" aria-hidden="true"><g fill="none" stroke="#1F4E3D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M42 18v54M42 46h36v26M36 18h12"/></g></svg>';
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":s;return d.innerHTML}
+function rendu(){G.innerHTML="";var l=tous.filter(function(p){return cat==="Tout"||p.categorie===cat});
+if(!l.length){G.innerHTML="<p>Rien dans cette catégorie pour le moment. Revenez après le prochain débarras.</p>";return}
+l.forEach(function(p){var v=p.statut==="vendu",r=p.statut==="réservé",d=document.createElement("article");d.className="objet"+(v?" vendu":"");
+var msg="Bonjour, je souhaite réserver : "+p.titre+" ("+p.prix+" CHF), réf. "+p.id;
+d.innerHTML='<div class="ph">'+(p.photo?'<img loading="lazy" src="'+esc(p.photo)+'" alt="'+esc(p.titre)+'">':ICO)+'</div><span class="tag">'+esc(p.prix)+' CHF</span><div class="c"><h3>'+esc(p.titre)+'</h3><p>'+esc(p.etat)+(p.dimensions?"<br>"+esc(p.dimensions):"")+'</p>'+
+(v?'<span class="st">Vendu</span>':r?'<span class="st" style="color:var(--tomate)">Réservé</span>':'<a class="btn" rel="noopener" href="https://wa.me/'+S.telephoneLien.replace("+","")+"?text="+encodeURIComponent(msg)+'">Réserver</a><a style="font-size:.9rem;text-align:center" href="mailto:'+S.email+"?subject="+encodeURIComponent("Réservation "+p.id)+"&body="+encodeURIComponent(msg)+'">ou par e-mail</a>')+'</div>';G.appendChild(d)})}
+fetch("data/produits.json").then(function(r){return r.json()}).then(function(d){
+var ordre={"en vente":0,"réservé":1,"vendu":2};tous=d.filter(function(p){return ordre[p.statut]!==undefined}).sort(function(a,b){return ordre[a.statut]-ordre[b.statut]});
+var b=document.getElementById("bandeau");
+if(!S.boutiqueOuverte||tous.some(function(p){return p.exemple})){b.hidden=false;b.innerHTML="<b>La boutique ouvre bientôt.</b> Les objets ci-dessous sont des exemples pour montrer à quoi elle ressemblera ; ils ne sont pas à vendre."}
+var cats=["Tout"];tous.forEach(function(p){if(cats.indexOf(p.categorie)<0)cats.push(p.categorie)});
+cats.forEach(function(c){var x=document.createElement("button");x.type="button";x.textContent=c;x.setAttribute("aria-pressed",c===cat);x.onclick=function(){cat=c;[].forEach.call(F.children,function(k){k.setAttribute("aria-pressed",k.textContent===c)});rendu()};F.appendChild(x)});rendu()
+}).catch(function(){G.innerHTML="<p>Impossible de charger la liste des objets. Vérifiez que le fichier data/produits.json existe et qu'il est valide.</p>"});
+})();
+</script>
+<footer><div class="w"><p><span data-site="nom">Main Forte</span>, <span data-site="signature"></span>. <span data-site="prenom">Philippe</span>, indépendant, <span data-site="zone">Canton de Vaud</span>. Prix nets, TVA non applicable. © <span id="annee"></span></p>
+<p><a href="index.html">Accueil</a> | <a href="boutique.html">Boutique</a> | <a href="index.html#contact">Contact</a></p></div></footer></body></html>

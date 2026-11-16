@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gestion | Main Forte</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/logos/logo-maison.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="config.js"></script>
+<style>
+body{background:#f3f1ec}.onglets{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.carte{background:#fff;border:2px solid var(--encre);border-radius:var(--r);padding:20px;margin-bottom:20px}
+table.g{width:100%;border-collapse:collapse;font-size:.95rem}table.g th,table.g td{padding:7px 8px;border-bottom:1px solid #ddd;text-align:left;vertical-align:middle}
+table.g input[type=number]{width:74px}input,select,textarea{font:inherit;padding:7px;border:1.5px solid var(--encre);border-radius:7px;background:#fff}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.grid2 label{display:grid;gap:4px;font-weight:600;font-size:.92rem}
+.tot{font:700 1.9rem "Bricolage Grotesque",sans-serif}.petit{font-size:.88rem;color:var(--gris)}
+.vieux{background:#fdecc8}.mini{padding:5px 10px;font-size:.85rem}textarea.mono{width:100%;font-family:ui-monospace,monospace;font-size:.82rem}
+[hidden]{display:none!important}
+</style></head><body>
+<header class="site"><div class="w"><a class="marque" href="index.html"><img src="assets/logos/logo-maison.svg" alt=""><span><b>Gestion</b><small data-site="nom"></small></span></a><span class="petit" id="etat-sauv"></span></div></header>
+<main class="w">
+<div class="onglets puces" role="tablist"><button data-o="devis" aria-pressed="true">Devis</button><button data-o="objets" aria-pressed="false">Objets et provenance</button><button data-o="sauv" aria-pressed="false">Sauvegarde</button></div>
+
+<section id="o-devis" style="padding:0">
+<div class="carte"><h2 style="font-size:1.4rem">Cubage</h2><p class="petit">Saisis les quantités pendant la visite. Les volumes par objet sont des repères : corrige la ligne « Divers » si besoin.</p>
+<table class="g" id="cub"><thead><tr><th>Objet</th><th>m³ l'unité</th><th>Quantité</th><th>m³</th></tr></thead><tbody></tbody></table></div>
+<div class="carte"><h2 style="font-size:1.4rem">Conditions</h2><div class="grid2">
+<label>Client<input id="d-client"></label><label>Commune<input id="d-commune"></label>
+<label>Étages sans ascenseur au-delà du 1er<input type="number" id="d-etage" min="0" value="0"></label>
+<label>Urgence sous 72 h<select id="d-urg"><option value="0">Non</option><option value="0.15">Oui (+15 %)</option></select></label>
+<label>Logement très encombré (%)<input type="number" id="d-enc" min="0" max="50" value="0"></label>
+<label>Produits spéciaux, coût réel (CHF)<input type="number" id="d-spec" min="0" value="0"></label>
+<label>Valeur de revente estimée des trouvailles (CHF)<input type="number" id="d-rev" min="0" value="0"></label>
+<label>Part déduite du devis (%)<input type="number" id="d-part" min="0" max="100" value="30"></label></div></div>
+<div class="carte"><div class="grid2"><div><span class="petit">Volume</span><div class="tot" id="r-vol"></div></div><div><span class="petit">Prix client, net</span><div class="tot" id="r-prix"></div></div><div><span class="petit">Acompte 30 %</span><div class="tot" id="r-aco"></div></div><div><span class="petit">Ta marge estimée avant frais fixes</span><div class="tot" id="r-marge"></div></div></div>
+<p class="petit" id="r-det"></p><button class="btn" id="d-copier">Copier le texte du devis</button> <span class="petit" id="d-ok"></span>
+<textarea class="mono" id="d-txt" rows="9" readonly style="margin-top:12px"></textarea></div>
+</section>
+
+<section id="o-objets" hidden style="padding:0">
+<div class="carte"><h2 style="font-size:1.4rem" id="f-titre">Ajouter un objet</h2>
+<form id="f-obj" class="grid2">
+<label>Titre<input name="titre" required></label>
+<label>Catégorie<select name="categorie"><option>Meubles</option><option>Luminaires</option><option>Cuisine</option><option>Décoration</option><option>Atelier</option><option>Livres et disques</option><option>Divers</option></select></label>
+<label>Prix affiché (CHF)<input name="prix" type="number" min="0" required></label>
+<label>État, remise en état faite<input name="etat"></label>
+<label>Dimensions<input name="dimensions"></label>
+<label>Photo (chemin, ex. images/mf-0007.jpg)<input name="photo"></label>
+<label>Statut<select name="statut"><option>en préparation</option><option>en vente</option><option>réservé</option><option>vendu</option><option>donné</option><option>éliminé</option></select></label>
+<label>Provenance : mandat ou client<input name="mandat" required placeholder="Mandat 2027-003, succession X"></label>
+<label>Provenance : commune<input name="commune"></label>
+<label>Date d'entrée<input name="entree" type="date" required></label>
+<label>Date de vente ou de sortie<input name="sortie" type="date"></label>
+<label>Prix encaissé (CHF)<input name="encaisse" type="number" min="0"></label>
+<input type="hidden" name="id">
+<div style="align-self:end"><button class="btn" type="submit">Enregistrer l'objet</button> <button class="btn c" type="reset" id="f-annul">Vider</button></div>
+</form></div>
+<div class="carte"><p id="stats" style="font-weight:600"></p><p class="petit">En jaune : en vente depuis plus de 30 jours. Baisse le prix ou donne.</p>
+<div style="overflow:auto"><table class="g" id="t-obj"><thead><tr><th>Réf.</th><th>Objet</th><th>Prix</th><th>Statut</th><th>Provenance</th><th>Entrée</th><th></th></tr></thead><tbody></tbody></table></div></div>
+<div class="carte"><h2 style="font-size:1.4rem">Mettre la boutique à jour</h2>
+<p>La boutique lit le fichier <b>data/produits.json</b>. Télécharge-le ici, puis remplace celui du dépôt GitHub (Add file, Upload files). Seuls les objets en vente, réservés ou vendus y figurent, sans la provenance.</p>
+<button class="btn" id="x-json">Télécharger produits.json</button> <button class="btn c" id="x-copie">Copier le contenu</button> <span class="petit" id="x-ok"></span>
+<textarea class="mono" id="x-txt" rows="6" readonly style="margin-top:12px"></textarea></div>
+</section>
+
+<section id="o-sauv" hidden style="padding:0"><div class="carte"><h2 style="font-size:1.4rem">Sauvegarde</h2>
+<p>Les données sont enregistrées dans ce navigateur, sur cet appareil uniquement. Fais une sauvegarde après chaque chantier : c'est aussi ton registre de provenance en cas de contrôle.</p>
+<button class="btn" id="s-exp">Télécharger la sauvegarde complète</button>
+<p style="margin-top:18px"><label style="font-weight:600">Restaurer une sauvegarde (remplace les données actuelles)<br><input type="file" id="s-imp" accept="application/json,.json"></label></p><p class="petit" id="s-ok"></p></div></section>
+</main>
+<script>
+(function(){var S=window.SITE,CLE="mainforte-gestion-v1",D={objets:[],seq:1};
+try{var b=localStorage.getItem(CLE);if(b)D=JSON.parse(b)}catch(e){}
+function sauver(){try{localStorage.setItem(CLE,JSON.stringify(D));document.getElementById("etat-sauv").textContent="Enregistré sur cet appareil"}catch(e){document.getElementById("etat-sauv").textContent="Enregistrement impossible sur cet appareil : exporte une sauvegarde"}}
+function $(i){return document.getElementById(i)}
+function fr(n){return Math.round(n).toLocaleString("fr-CH")+" CHF"}
+function telecharger(nom,txt){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=nom;document.body.appendChild(a);a.click();a.remove()}
+function copier(txt,ok){if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){ok.textContent="Copié"},function(){ok.textContent="Copie refusée : sélectionne le texte ci-dessous"})}else ok.textContent="Sélectionne le texte ci-dessous"}
+// onglets
+document.querySelectorAll("[data-o]").forEach(function(b){b.onclick=function(){document.querySelectorAll("[data-o]").forEach(function(x){x.setAttribute("aria-pressed",x===b);$("o-"+x.dataset.o).hidden=x!==b})}});
+// ---- devis
+var CUB=[["Armoire 2 portes",1.2],["Armoire 3 portes ou plus",1.8],["Lit double avec matelas",1.5],["Lit simple avec matelas",0.9],["Canapé 3 places",1.8],["Fauteuil",0.6],["Table et 4 chaises",1.5],["Buffet ou vaisselier",1.2],["Commode, table de nuit, petit meuble",0.5],["Bibliothèque ou étagère",0.8],["Frigo ou congélateur",0.7],["Lave-linge, cuisinière, lave-vaisselle",0.4],["Télévision et meuble",0.5],["Carton ou bac rempli",0.07],["Sac 110 litres",0.11],["Vrac de cave, par m² au sol sur 1 m de haut",1],["Divers, en m³",1]];
+var tb=document.querySelector("#cub tbody");
+CUB.forEach(function(c,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+c[0]+"</td><td>"+String(c[1]).replace(".",",")+"</td><td><input type='number' min='0' step='"+(i===16?"0.5":"1")+"' value='0' aria-label='Quantité "+c[0]+"'></td><td class='v'>0</td>";tb.appendChild(tr)});
+function devis(){var vol=0;[].forEach.call(tb.rows,function(tr,i){var q=+tr.querySelector("input").value||0,v=q*CUB[i][1];tr.querySelector(".v").textContent=v?v.toFixed(1).replace(".",","):"";vol+=v});
+var base=vol?Math.max(S.minimum,Math.min(vol,30)*S.prixM3+Math.max(vol-30,0)*S.prixM3Grand):0;
+var k=1+0.05*(+$("d-etage").value||0)+(+$("d-urg").value)+(+$("d-enc").value||0)/100,sup=base*(k-1),spec=+$("d-spec").value||0;
+var ded=Math.min(base+sup,(+$("d-rev").value||0)*(+$("d-part").value||0)/100),prix=Math.round((base+sup+spec-ded)/10)*10;
+var jours=Math.max(0.5,Math.round(vol/13*2)/2),aide=vol>10?Math.max(0,jours-0.5):0,cout=vol*20+jours*115+aide*220+spec;
+$("r-vol").textContent=vol.toFixed(1).replace(".",",")+" m³";$("r-prix").textContent=fr(prix);$("r-aco").textContent=fr(prix*0.3);$("r-marge").textContent=fr(prix-cout+(+$("d-rev").value||0)*0.92);
+$("r-det").textContent="Base "+fr(base)+", suppléments "+fr(sup)+", produits spéciaux "+fr(spec)+", déduction trouvailles "+fr(ded)+". Coûts estimés : "+fr(cout)+" (élimination 20 CHF/m³, "+jours+" jour(s) de fourgon, "+aide+" jour(s) d'aide). La marge inclut la revente attendue, moins 8 % de frais.";
+var L=["Devis de débarras, "+S.nom,"Client : "+($("d-client").value||"…")+", "+($("d-commune").value||"…"),"Volume estimé : "+vol.toFixed(1).replace(".",",")+" m³","Débarras complet (tri, main-d'œuvre, transport, élimination) : "+fr(base)];
+if(sup)L.push("Suppléments (accès, délai, encombrement) : "+fr(sup));if(spec)L.push("Élimination de produits spéciaux : "+fr(spec));if(ded)L.push("Déduction pour objets repris : -"+fr(ded));
+L.push("Total net, TVA non applicable : "+fr(prix),"Acompte à la signature (30 %) : "+fr(prix*0.3),"Inclus : remise des objets personnels retrouvés, balayage final, photos avant et après, justificatifs d'élimination.","Les objets non conservés par la famille deviennent la propriété de l'entreprise. Prix valable 30 jours, pour le volume constaté à la visite.");
+$("d-txt").value=L.join("\n")}
+$("o-devis").addEventListener("input",devis);$("d-copier").onclick=function(){copier($("d-txt").value,$("d-ok"))};devis();
+// ---- objets
+var F=$("f-obj"),PUB={"en vente":1,"réservé":1,"vendu":1};
+function esc(s){var d=document.createElement("div");d.textContent=s==null?"":s;return d.innerHTML}
+function jsonPublic(){return JSON.stringify(D.objets.filter(function(o){return PUB[o.statut]}).map(function(o){return{id:o.id,titre:o.titre,categorie:o.categorie,prix:+o.prix,etat:o.etat||"",dimensions:o.dimensions||"",statut:o.statut,photo:o.photo||""}}),null,1)}
+function liste(){var t=document.querySelector("#t-obj tbody");t.innerHTML="";var now=Date.now(),stock=0,val=0,ventes=0;
+D.objets.slice().reverse().forEach(function(o){var age=(now-new Date(o.entree).getTime())/864e5,tr=document.createElement("tr");
+if(o.statut==="en vente"||o.statut==="réservé"||o.statut==="en préparation"){stock++;val+=+o.prix||0}if(o.statut==="vendu")ventes+=+(o.encaisse||o.prix)||0;
+if(o.statut==="en vente"&&age>30)tr.className="vieux";
+tr.innerHTML="<td>"+esc(o.id)+"</td><td>"+esc(o.titre)+"</td><td>"+esc(o.prix)+"</td><td>"+esc(o.statut)+"</td><td>"+esc(o.mandat)+(o.commune?", "+esc(o.commune):"")+"</td><td>"+esc(o.entree)+"</td><td><button class='btn c mini' data-e='"+esc(o.id)+"'>Modifier</button></td>";t.appendChild(tr)});
+if(!D.objets.length)t.innerHTML="<tr><td colspan='7'>Aucun objet pour l'instant. Ajoute le premier avec le formulaire ci-dessus.</td></tr>";
+$("stats").textContent=stock+" objet(s) en stock pour "+fr(val)+" affichés. Ventes encaissées : "+fr(ventes)+".";$("x-txt").value=jsonPublic()}
+F.addEventListener("submit",function(e){e.preventDefault();var o={};new FormData(F).forEach(function(v,k){o[k]=v});
+if(o.id){var i=D.objets.findIndex(function(x){return x.id===o.id});D.objets[i]=o}else{o.id="MF-"+String(D.seq++).padStart(4,"0");D.objets.push(o)}
+sauver();F.reset();F.elements.id.value="";$("f-titre").textContent="Ajouter un objet";liste()});
+$("f-annul").onclick=function(){F.elements.id.value="";$("f-titre").textContent="Ajouter un objet"};
+document.querySelector("#t-obj").addEventListener("click",function(e){var id=e.target.dataset.e;if(!id)return;var o=D.objets.find(function(x){return x.id===id});Object.keys(o).forEach(function(k){if(F.elements[k])F.elements[k].value=o[k]});$("f-titre").textContent="Modifier "+id;F.scrollIntoView()});
+$("x-json").onclick=function(){telecharger("produits.json",jsonPublic())};$("x-copie").onclick=function(){copier(jsonPublic(),$("x-ok"))};
+$("s-exp").onclick=function(){telecharger("sauvegarde-gestion-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify(D,null,1))};
+$("s-imp").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);if(!Array.isArray(x.objets))throw 0;D=x;sauver();liste();$("s-ok").textContent="Sauvegarde restaurée : "+D.objets.length+" objet(s)."}catch(err){$("s-ok").textContent="Ce fichier n'est pas une sauvegarde valide. Rien n'a été modifié."}};r.readAsText(f)};
+liste();sauver();
+})();
+</script></body></html>

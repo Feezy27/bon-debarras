@@ -1,0 +1,8 @@
+[
+{"id":"ex-001","titre":"Buffet en chêne années 50","categorie":"Meubles","prix":180,"etat":"Nettoyé, ciré, deux tiroirs resserrés","dimensions":"160 x 45 x 95 cm","statut":"en vente","photo":"","exemple":true},
+{"id":"ex-002","titre":"Lot de 6 chaises bistrot","categorie":"Meubles","prix":90,"etat":"Solides, assises d'origine","dimensions":"","statut":"en vente","photo":"","exemple":true},
+{"id":"ex-003","titre":"Lampe de bureau articulée","categorie":"Luminaires","prix":35,"etat":"Fonctionne, câble contrôlé","dimensions":"","statut":"réservé","photo":"","exemple":true},
+{"id":"ex-004","titre":"Service à fondue complet","categorie":"Cuisine","prix":25,"etat":"Complet, 6 fourchettes","dimensions":"","statut":"en vente","photo":"","exemple":true},
+{"id":"ex-005","titre":"Établi d'atelier avec étau","categorie":"Atelier","prix":120,"etat":"Dans son jus, très stable","dimensions":"140 x 60 x 85 cm","statut":"en vente","photo":"","exemple":true},
+{"id":"ex-006","titre":"Miroir doré à poser","categorie":"Décoration","prix":45,"etat":"Petits éclats au cadre","dimensions":"60 x 90 cm","statut":"vendu","photo":"","exemple":true}
+]

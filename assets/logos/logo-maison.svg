@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Main Forte">
+<rect width="120" height="120" rx="26" fill="#1F4E3D"/>
+<path d="M24 58 60 26l36 32v36a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4z" fill="none" stroke="#FBFAF6" stroke-width="6" stroke-linejoin="round"/>
+<g stroke="#E8B23A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<path d="M48 50v40M48 72h24v18M48 60h0"/></g>
+</svg>

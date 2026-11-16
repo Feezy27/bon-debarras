@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Main Forte">
+<circle cx="60" cy="60" r="56" fill="#E8B23A"/>
+<circle cx="60" cy="60" r="47" fill="none" stroke="#1F4E3D" stroke-width="3"/>
+<circle cx="60" cy="60" r="41" fill="none" stroke="#1F4E3D" stroke-width="1.5" stroke-dasharray="2 5"/>
+<text x="60" y="74" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="44" fill="#1F4E3D" letter-spacing="-2">MF</text>
+<path d="M38 84h44" stroke="#1F4E3D" stroke-width="3" stroke-linecap="round"/>
+</svg>
